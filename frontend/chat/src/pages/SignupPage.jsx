@@ -34,13 +34,13 @@ export const SignupPage = () =>{
     }
 
     return <>
-    <div className="h-screen grid grid-cols-2 pt-16">
+    <div className="min-h-screen grid grid-cols-2 pt-8">
         <div className="flex flex-col h-screen p-6 sm:p-12  ">
             <div className="w-full max-w-md space-y-6">
                 <div className="text-center mb-8">
                     <div className="flex flex-col items-center gap-2 group">
                         <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <MessageSquare className="size-6 text-primary" />
+                            <MessageSquare className="h-8 w-8q text-primary" />
                         </div>
                         <h1 className="text-2xl font-bold mt-2">Create Account</h1>
                         <p>Get started with your free account</p>
