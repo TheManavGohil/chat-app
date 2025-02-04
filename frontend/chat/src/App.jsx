@@ -9,14 +9,21 @@ import { SignupPage } from './pages/SignupPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { ProfilePage } from './pages/ProfilePage'
 import { useAuthStore } from './store/useAuthStore'
+import { useThemeStore } from './store/useThemeStore'
 import { Loader } from 'lucide-react'
 
 function App() {
   
   const { checkAuth, authUser, isCheckingAuth } = useAuthStore()
+  const { theme } = useThemeStore()
+
   useEffect(()=>{
     checkAuth()
   }, [checkAuth])
+
+  useEffect(()=>{
+    document.documentElement.setAttribute('data-theme', theme)
+  })
 
   if(isCheckingAuth && !authUser){
     return(
@@ -26,7 +33,6 @@ function App() {
     )
   }
 
-  console.log(authUser)
 
   return (
     <>
