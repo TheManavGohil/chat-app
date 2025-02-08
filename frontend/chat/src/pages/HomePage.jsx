@@ -13,9 +13,12 @@ export const HomePage = () =>{
         <div className="flex items-center justify-center pt-20 px-4">
             <div className="bg-base-100 rounded-lg shadow-lg w-full max-w-6xl">
                 <div className="flex h-full rounded-lg overflow-hidden">
-                    <Sidebar />
-
+                    
+                <Sidebar />
+                
+                <div className="flex-1 h-full">
                     { selectedUser ? <ChatContainer /> : <NoChatSelected /> }
+                </div>
 
                     
                 </div>

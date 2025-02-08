@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import AuthImagePattern from "../components/AuthImagePattern"
 
 export const LoginPage = () =>{
-    
+
     const [showpassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState({
         email: "",
@@ -25,7 +25,7 @@ export const LoginPage = () =>{
         <div className="flex flex-col h-screen p-6 sm:p-12  ">
             <div className="w-full max-w-md space-y-6">
                 <div className="text-center mb-8">
-                    <div className="flex flex-col items-center gap-2 group">
+                    <div className="flex flex-col items-center gap-2 group"> 
                         <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                             <MessageSquare className="size-6 text-primary" />
                         </div>

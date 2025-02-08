@@ -9,6 +9,7 @@ export const useAuthStore = create( (set) => ({
     isLogingIn :  false,
     isUpdatingProfile :  false,
     islogingOut : false,
+    onlineUsers : [],
 
     isCheckingAuth : true,
 
@@ -50,7 +51,7 @@ export const useAuthStore = create( (set) => ({
 
             toast.success('Logged in successfull!')
         }catch(error){
-            toast.error(error.response.data.message)
+            toast.error('Invalid Credentials')
         }finally{
             set({ isLogingIn : false })
         }

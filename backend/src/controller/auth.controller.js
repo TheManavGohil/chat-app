@@ -52,12 +52,12 @@ export const login= async (req, res)=>{
 
         const user = await User.findOne({email})
         if(!user){
-            return res.json({message:'Invalid Credentials'})
+            return res.status(401).json({message:'Invalid Credentials'})
         }
 
         const isPasswordCorrect = await bycrypt.compare(password, user.password)
         if(!isPasswordCorrect){
-            return res.json({message:'Invalid Credentials'})
+            return res.status(401).json({message:'Invalid Credentials'})
         }
 
         generateToken(user._id, res)

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Camera, Mail, User } from 'lucide-react'
 import { useAuthStore } from '../store/useAuthStore'
+import toast from "react-hot-toast"
 
 
 export const ProfilePage = () =>{
@@ -9,19 +10,26 @@ export const ProfilePage = () =>{
     const [selectedImage, setSelectedImage] = useState(null) 
 
     const handleImageUpload = async (e) =>{
-        const file = e.target.files[0]
-        if(!file){
-            return
-        }
+        try{
 
-        const reader = new FileReader()
-
-        reader.readAsDataURL(file)
-
-        reader.onload = async () =>{
-            const base64Image = reader.result
-            setSelectedImage(base64Image)
-            await updateProfile({ profilePic: base64Image })
+                const file = e.target.files[0]
+                if(!file){
+                    return
+                }
+        
+                const reader = new FileReader()
+        
+                reader.readAsDataURL(file)
+        
+                reader.onload = async () =>{
+                    const base64Image = reader.result
+                    setSelectedImage(base64Image)
+                    await updateProfile({ profilePic: base64Image })
+                }
+        
+                toast.success('Profile Photo updated Sucessfully!')
+        }catch{
+            toast.error('Error while updating profile photo')
         }
 
     }
