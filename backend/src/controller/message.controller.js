@@ -42,16 +42,20 @@ export const sendMessages = async (req, res) =>{
 
         let imageUrl
         if(image){
-            const uploadResponse = await cloudinary.uploader.upload(image)
+            const uploadResponse = await cloudinary.uploader.upload(image, {
+                folder: "chat_images",
+                resource_type: "image",
+                cross_origin: "*"
+            });
             imageUrl = uploadResponse.secure_url
         }
 
-        const newMessage = { 
+        const newMessage = new Message({ 
             senderId,
             receiverId,
             text,
             image:imageUrl
-        }
+        })
         await newMessage.save()
 
         // realtime functionality using socket.io later

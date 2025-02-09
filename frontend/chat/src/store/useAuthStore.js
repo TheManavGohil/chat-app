@@ -18,6 +18,10 @@ export const useAuthStore = create( (set) => ({
         try{
             const res = await axiosInstance.get('/auth/check')
 
+            if (!res || !res.data) {
+                throw new Error("Invalid response from server");
+            }
+
             set({ authUser : res.data })
         }catch(error){
             console.log('error in checkAuth: ',error.response.data.message)

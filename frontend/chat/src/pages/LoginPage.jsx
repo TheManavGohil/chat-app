@@ -21,9 +21,9 @@ export const LoginPage = () =>{
 
 
     return <>
-    <div className="h-screen grid grid-cols-2 pt-8">
-        <div className="flex flex-col h-screen p-6 sm:p-12  ">
-            <div className="w-full max-w-md space-y-6">
+    <div className="h-screen grid grid-cols-1 lg:grid-cols-2 pt-8">
+        <div className="flex flex-col h-screen p-6 sm:p-12">
+            <div className="w-full max-w-md space-y-6 mx-auto">
                 <div className="text-center mb-8">
                     <div className="flex flex-col items-center gap-2 group"> 
                         <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -102,11 +102,12 @@ export const LoginPage = () =>{
             </div>
         </div> 
 
-
-        <AuthImagePattern   
-        title="Join our community"
-        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
-      />
+        <div className="hidden lg:flex">
+            <AuthImagePattern   
+            title="Join our community"
+            subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
+            />
+        </div>
 
     </div>
     </>
