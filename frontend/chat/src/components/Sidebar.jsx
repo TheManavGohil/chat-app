@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useChatStore } from "../store/useChatStore"
 import { useAuthStore } from "../store/useAuthStore"
 import SidebarSkeleton from "./skeletons/sideBarSkeleton"
@@ -9,10 +9,13 @@ export const Sidebar = () =>{
     const { users, selectedUser, setSelectedUser, getUsers, isUsersLoading } = useChatStore()
 
     const { onlineUsers } = useAuthStore()
+    const [showOnlineOnly, setShowOnlineOnly] = useState(false)
 
     useEffect(()=> {
         getUsers()
     },[getUsers])
+
+    const filteredUser = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users 
 
     if(isUsersLoading) return <SidebarSkeleton />
 
@@ -23,10 +26,21 @@ export const Sidebar = () =>{
                 <User className="w-6 h-6"/>
                 <span className="font-medium hidden lg:block">Contacts</span>
             </div>
-            {/* Todo : online filter */}
+            <div className="mt-3 hidden lg:flex items-center gap-2">
+          <label className="cursor-pointer flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={showOnlineOnly}
+              onChange={(e) => setShowOnlineOnly(e.target.checked)}
+              className="checkbox checkbox-sm"
+            />
+            <span className="text-sm">Show online only</span>
+          </label>
+          <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+        </div>
         </div>
         <div className="overflow-y-auto w-full py-3">
-            {users.map((user)=>(
+            {filteredUser.map((user)=>(
                 <button 
                     key={user._id}
                     onClick={()=> setSelectedUser(user)}
