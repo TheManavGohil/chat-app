@@ -1,5 +1,5 @@
 import cloudinary from "../lib/cloudinary.js"
-import { getRecieverSocketId, io } from "../lib/socket.js"
+import { getReceiverSocketId, io } from "../lib/socket.js"
 import Message from "../models/message.model.js"
 import User from "../models/user.model.js"
 
@@ -35,42 +35,43 @@ export const getMessages = async (req, res) =>{
     }
 }
 
-export const sendMessages = async (req, res) =>{
-    try{
-        const { text, image } = req.body
-        const { id: receiverId } = req.params
-        const senderId = req.user._id
+export const sendMessages = async (req, res) => {
+    try {
+        const { text, image } = req.body;
+        const { id: receiverId } = req.params;
+        const senderId = req.user._id;
 
-        let imageUrl
-        if(image){
+        let imageUrl;
+        if (image) {
             const uploadResponse = await cloudinary.uploader.upload(image, {
                 folder: "chat_images",
                 resource_type: "image",
                 cross_origin: "*"
             });
-            imageUrl = uploadResponse.secure_url
+            imageUrl = uploadResponse.secure_url;
         }
 
-        const newMessage = new Message({ 
+        const newMessage = new Message({
             senderId,
             receiverId,
             text,
-            image:imageUrl
-        })
-        await newMessage.save()
+            image: imageUrl
+        });
+        await newMessage.save();
 
-        // realtime functionality using socket.io later
-        res.status(201).json(newMessage)
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        console.log(`Sending message to receiver ${receiverId}, Socket ID: ${receiverSocketId}`);
 
-        const recieverSocketId = getRecieverSocketId(receiverId)
-        if(recieverSocketId){
-            io.to(recieverSocketId).emit('newMessage', newMessage)
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+            console.log("📨 Message sent successfully via socket!");
+        } else {
+            console.log("Receiver is not online.");
         }
-        
-        res.status(201).json(newMessage)
+
+        res.status(201).json(newMessage);
+    } catch (error) {
+        console.log("Error in sendMessage controller:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-    catch(error){
-        console.log('Error in sendMessage controller ', error.message)
-        res.status(500).json({ message:'Internal Server Error' })
-    }
-}
+};

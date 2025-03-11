@@ -47,24 +47,37 @@ export const useChatStore = create( (set, get) => ({
     },
 
     subscribeToMessages: () => {
-        const { selectedUser } = get()
-        if(!selectedUser) return 
-
-        const socket = useAuthStore.getState().socket
-
-        socket.on('newMessage', (newMessage) => { 
-            if(!newMessage.senderId != selectedUser._id) return
-            
+        const { selectedUser } = get();
+        if (!selectedUser) return;
+    
+        const socket = useAuthStore.getState().socket;
+    
+        if (!socket) {
+            console.error("🚨 Error: Socket is not connected!");
+            return;
+        }
+    
+        socket.on("newMessage", (newMessage) => {
+            if (newMessage.senderId !== selectedUser._id) return;
+    
             set({
-                messages: [...get().messages, newMessage]
-            })
-        })
-    },   
-
-    unSubscribeFromMessages: () =>{
-        const socket = useAuthStore.getState().socket
-        socket.off('newMessage')
+                messages: [...get().messages, newMessage],
+            });
+        });
     },
+       
+
+    unSubscribeFromMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        
+        if (!socket) {
+            console.warn("⚠️ Warning: Trying to unsubscribe but socket is null!");
+            return;
+        }
+    
+        socket.off("newMessage");
+    },
+    
 
      setSelectedUser: (selectedUser) => set({ selectedUser }), 
 

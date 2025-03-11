@@ -22,7 +22,7 @@ function App() {
 
   useEffect(()=>{
     checkAuth()
-  }, [checkAuth])
+  }, [])
 
   useEffect(()=>{
     document.documentElement.setAttribute('data-theme', theme)

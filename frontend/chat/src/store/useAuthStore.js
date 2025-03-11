@@ -15,7 +15,7 @@ export const useAuthStore = create( (set,get) => ({
     onlineUsers : [],
 
     isCheckingAuth : true,
-    socket:null,
+    socket: null,
 
     checkAuth : async () =>{
         set({ isCheckingAuth : true })
@@ -28,6 +28,7 @@ export const useAuthStore = create( (set,get) => ({
 
             set({ authUser : res.data })
             get().connectSocket()
+
         }catch(error){
             console.log('error in checkAuth: ',error.response.data.message)
 
@@ -46,6 +47,7 @@ export const useAuthStore = create( (set,get) => ({
             toast.success('Account created successfully!')
 
             get().connectSocket()
+
         }catch(error){
             toast.error(error.response.data.message)
         }finally{
@@ -63,6 +65,7 @@ export const useAuthStore = create( (set,get) => ({
             toast.success('Logged in successfull!')
 
             get().connectSocket()
+
         }catch(error){
             toast.error('Invalid Credentials')
         }finally{
@@ -79,6 +82,7 @@ export const useAuthStore = create( (set,get) => ({
             toast.success('Logout Successfull!')
 
             get().disConnectSocket()
+
         }catch(error){
             toast.error(error.response.data.message)
         }finally{
@@ -101,26 +105,56 @@ export const useAuthStore = create( (set,get) => ({
     },
 
     connectSocket: () => {
-        const {authUser}  = get()
-        if(!authUser || get().socket?.connected) return 
 
-        const socket = io(BASE_URL,{
-            query: {
-                userId: authUser._id
-            }
-        })
-        socket.connect()
-
-        set({ socket:socket })
-
-        socket.on('getOnlineUsers', (userIds) => {
-            set({ onlineUsers:userIds })
-        })
+        get().disConnectSocket();
+        
+        const { authUser, socket } = get();
+        if (!authUser) return;
+    
+        if (socket) {
+            console.log("⚠️ Socket already connected:", socket.id);
+            return; 
+        }
+    
+        console.log("🔌 Connecting to socket...");
+    
+        const newSocket = io(BASE_URL, {
+            query: { userId: authUser._id },
+            transports: ["websocket"], 
+        });
+    
+        newSocket.on("connect", () => {
+            console.log("Socket connected:", newSocket.id);
+            set({ socket: newSocket });
+        });
+    
+        newSocket.on("disconnect", () => {
+            console.log("Socket disconnected");
+            set({ socket: null }); 
+        });
+    
+        newSocket.on("getOnlineUsers", (userIds) => {
+            set({ onlineUsers: userIds });
+        });
+    
+        set({ socket: newSocket });
     },
+    
+    
 
     disConnectSocket: () => {
-        if(get().socket?.connect){
-            get().socket.disconnect()
-        }
+        const { socket } = get();
+        if (!socket) return;
+    
+        console.log("🔌 Disconnecting socket:", socket.id);
+    
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.off("getOnlineUsers");
+    
+        socket.disconnect();
+    
+        set({ socket: null });
     }
+    
 }))
