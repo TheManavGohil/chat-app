@@ -19,6 +19,9 @@ export const LoginPage = () =>{
         login(formData)
     }
 
+    const handleGoogleLogin = () => {
+        window.open("http://localhost:5001/api/auth/google", "_self"); 
+    };
 
     return <>
     <div className="h-screen grid grid-cols-1 lg:grid-cols-2 pt-8">
@@ -88,9 +91,12 @@ export const LoginPage = () =>{
                             "Sign in"
                         )}
                     </button>
-
                 </form>
 
+                <button onClick={handleGoogleLogin} className="btn btn-outline w-full flex items-center justify-center gap-2">
+                    Sign in with Google
+                </button>
+                
                 <div className="text-center">
                         <p className="text-base-content/60 pb-10">
                             Already have an account?{" "}

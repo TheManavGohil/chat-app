@@ -2,12 +2,15 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import express from 'express'
+import session from 'express-session'
+import passport from 'passport'
 import authRoutes from './routes/auth.route.js'
 import messageRoutes from './routes/message.route.js'
 import { connectMongo } from './lib/db.js'
 import cookieparser from 'cookie-parser'
 import cors from 'cors'
 import { app, server } from './lib/socket.js'
+import './lib/passport.js'
 
 
 
@@ -19,6 +22,15 @@ app.use(cors({
     origin: 'http://localhost:5174',
     credentials:true
 }))
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || '12345',
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)

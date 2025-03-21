@@ -2,6 +2,11 @@ import mongoose from 'mongoose'
 
 const userSchema = new mongoose.Schema(
     {
+        googleId: {
+            type: String,
+            unique: true,
+            sparse: true,  
+        },
         email:{
             type: String,
             required: true,
@@ -9,12 +14,16 @@ const userSchema = new mongoose.Schema(
         },
         fullName:{
             type: String,
-            required: true
+            required: function () {
+                return !this.googleId;  // Only require fullName if no googleId
+            },
         },
         password:{
             type: String,
-            required: true,
-            minlength: 6
+            minlength: 6,
+            required: function () {
+                return !this.googleId;  // Only required if not using Google OAuth
+            }
         },
         profilePic:{
             type: String,
