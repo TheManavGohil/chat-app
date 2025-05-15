@@ -92,29 +92,63 @@ export const updateProfile = async (req, res)=>{
         const userId = req.user._id
 
         if(!profilePic){
-            res.status(400).json({ message: 'Profile photo required' })
+            return res.status(400).json({ message: 'Profile photo required' });
         }
 
-        const uploadResponse = await cloudinary.uploader.upload(profilePic)
+        console.log("Uploading profile picture to Cloudinary...");
+        
+        // Create a unique identifier for the image
+        const uniqueId = `profile_${userId}_${Date.now()}`;
+        
+        const uploadOptions = {
+            folder: "profile_pics",
+            resource_type: "image",
+            public_id: uniqueId,  // Set a unique ID that doesn't rely on timestamps
+            use_filename: false,
+            unique_filename: false,
+            overwrite: true
+        };
+        
+        const uploadResponse = await cloudinary.uploader.upload(profilePic, uploadOptions);
+        
+        console.log("Cloudinary upload successful!");
+        
         const updatedUser = await User.findByIdAndUpdate(
             userId,
             {profilePic: uploadResponse.secure_url},
             {new:true}
-        )
+        );
 
-        res.status(200).json(updatedUser)
+        res.status(200).json({
+            _id: updatedUser._id,
+            fullName: updatedUser.fullName,
+            email: updatedUser.email,
+            profilePic: updatedUser.profilePic,
+            createdAt: updatedUser.createdAt
+        });
     }catch(error){
-        console.log('Error in updated profile', error)
-        res.status(500).json({message:'Internal Server Error'})
+        console.log('Error in updated profile', error);
+        res.status(500).json({message: error.message || 'Internal Server Error'});
     }
 }
 
 export const checkAuth = async (req, res) =>{
     try{
-        res.status(200).json(req.user)
+        const user = req.user;
+        if (!user) {
+            return res.status(401).json({ message: "Not authenticated" });
+        }
+
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            email: user.email,
+            profilePic: user.profilePic,
+            createdAt: user.createdAt
+        });
     }catch(error){
         console.log('error in check auth controller ', error.message)
-        res.status(500).json('Internal Server Error')
+        res.status(500).json({ message: 'Internal Server Error' })
     }
 }
 

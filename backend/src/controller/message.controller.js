@@ -43,11 +43,24 @@ export const sendMessages = async (req, res) => {
 
         let imageUrl;
         if (image) {
-            const uploadResponse = await cloudinary.uploader.upload(image, {
+            console.log("Uploading chat image to Cloudinary...");
+            
+            // Create a unique identifier for the image that doesn't rely on timestamps
+            const uniqueId = `chat_${senderId}_${receiverId}_${Date.now()}`;
+            
+            const uploadOptions = {
                 folder: "chat_images",
                 resource_type: "image",
+                public_id: uniqueId,
+                use_filename: false,
+                unique_filename: false,
+                overwrite: true,
                 cross_origin: "*"
-            });
+            };
+            
+            const uploadResponse = await cloudinary.uploader.upload(image, uploadOptions);
+            
+            console.log("Chat image uploaded successfully!");
             imageUrl = uploadResponse.secure_url;
         }
 

@@ -16,7 +16,9 @@ import './lib/passport.js'
 
 const PORT = process.env.PORT || 5001
 
-app.use(express.json())
+// Increase payload size limit for image uploads (50MB)
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(cookieparser())
 app.use(cors({
     origin: 'http://localhost:5174',

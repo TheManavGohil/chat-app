@@ -3,25 +3,72 @@ import { useRef, useState } from "react"
 import toast from 'react-hot-toast'
 import { useChatStore } from "../store/useChatStore"
 
+// Function to compress images before upload
+const compressImage = (imageFile, maxSizeMB = 1) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(imageFile);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                
+                // Calculate new dimensions while maintaining aspect ratio
+                const maxDimension = 1200; // Max width/height in pixels
+                if (width > height && width > maxDimension) {
+                    height = Math.round((height * maxDimension) / width);
+                    width = maxDimension;
+                } else if (height > maxDimension) {
+                    width = Math.round((width * maxDimension) / height);
+                    height = maxDimension;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Get compressed image as DataURL
+                const quality = 0.7; // Adjust quality as needed (0.7 = 70% quality)
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                resolve(compressedDataUrl);
+            };
+            img.onerror = reject;
+        };
+        reader.onerror = reject;
+    });
+};
 
 export const MessageInput = () => {
 
     const [ text, setText ] = useState('')
     const [ imagePreview, setImagePreview ] = useState(null)
+    const [ isCompressing, setIsCompressing ] = useState(false)
     const fileInputRef = useRef(null) 
     const { sendMessage } = useChatStore() 
 
-    const handleImageChange = (e) =>{
+    const handleImageChange = async (e) =>{
         const file = e.target.files[0]
+        if(!file) return;
+        
         if(!file.type.startsWith("image/")){
             toast.error('Please select an Image file')
             return 
-        } 
+        }
 
-        const reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onloadend = () =>{
-            setImagePreview(reader.result)
+        try {
+            setIsCompressing(true);
+            // Compress the image before setting preview
+            const compressedImage = await compressImage(file);
+            setImagePreview(compressedImage);
+        } catch (error) {
+            console.error("Error compressing image:", error);
+            toast.error("Error processing image. Please try a different one.");
+        } finally {
+            setIsCompressing(false);
         }
     }
 
@@ -74,7 +121,13 @@ export const MessageInput = () => {
                     </button>
                 </div>
             </div>
-        )}    
+        )}  
+        
+        {isCompressing && (
+            <div className="text-sm text-center mb-2">
+                Optimizing image...
+            </div>
+        )}  
         
         <form onSubmit={handleSendMessage} className="flex items-center gap-3">
             <div className="flex-1 flex gap-2">
@@ -89,7 +142,7 @@ export const MessageInput = () => {
 
                 <input 
                     type="file"
-                    accept="/image*"
+                    accept="image/*"
                     ref={fileInputRef}
                     className="hidden"
                     onChange={handleImageChange}
@@ -99,6 +152,7 @@ export const MessageInput = () => {
                     type="button"
                     className={`hidden sm:flex items-center btn btn-circle ${imagePreview ?  "text-emerald-500" : "text-zinc-400"}`}
                     onClick={() => { fileInputRef.current?.click() }}
+                    disabled={isCompressing}
                 >
                     <Image size={35} />
                 </button>
@@ -106,7 +160,7 @@ export const MessageInput = () => {
             <button
                 type="submit"
                 className="btn btn-sm btn-circle flex items-center"
-                disabled={!text.trim() && !imagePreview}
+                disabled={(!text.trim() && !imagePreview) || isCompressing}
             >
                 <Send size={35} />
             </button>
