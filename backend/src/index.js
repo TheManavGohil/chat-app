@@ -20,10 +20,24 @@ const PORT = process.env.PORT || 5001
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(cookieparser())
+
+
+const allowedOrigins = [
+  'http://localhost:5174', // local frontend
+   // replace with actual Vercel frontend URL
+];
+
 app.use(cors({
-    origin: 'http://localhost:5174',
-    credentials:true
-}))
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 
 app.use(session({
     secret: process.env.SESSION_SECRET || '12345',
