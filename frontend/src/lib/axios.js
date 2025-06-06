@@ -1,6 +1,8 @@
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
-    baseURL: "http://localhost:5001/api",
+    baseURL: process.env.VITE_API_URL,
     withCredentials: true
 })
+
+// backend deployed vercel url : https://chat-app-ten-coral-50.vercel.app/
