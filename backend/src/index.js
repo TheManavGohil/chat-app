@@ -24,7 +24,7 @@ app.use(cookieparser())
 
 const allowedOrigins = [
   'http://localhost:5174', // local frontend
-   // replace with actual Vercel frontend URL
+  'https://chat-app-vdfu.vercel.app/' // replace with actual Vercel frontend URL
 ];
 
 app.use(cors({
