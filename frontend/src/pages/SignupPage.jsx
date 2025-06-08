@@ -34,7 +34,8 @@ export const SignupPage = () =>{
     }
 
     const handleGoogleSignup = () => {
-        window.open("http://localhost:5001/api/auth/google", "_self"); 
+        const baseUrl = import.meta.env.MODE === "development" ? "http://localhost:5001" : "https://chatty-z8cs.onrender.com";
+        window.open(`${baseUrl}/api/auth/google`, "_self"); 
     };
 
     return <>
