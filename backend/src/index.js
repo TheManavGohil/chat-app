@@ -19,6 +19,8 @@ import './lib/passport.js'
 const PORT = process.env.PORT || 5001
 const __dirname = path.resolve()
 
+console.log("Backend __dirname:", __dirname)
+
 // Increase payload size limit for image uploads (50MB)
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
@@ -42,10 +44,16 @@ app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)
 
 if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join(__dirname, "../frontend/dist")))
+    const staticPath = path.join(__dirname, "../../frontend/dist")
+    const indexPath = path.join(__dirname, "../../frontend", "dist", "index.html")
+
+    console.log("Serving static files from:", staticPath)
+    console.log("Serving index.html from:", indexPath)
+
+    app.use(express.static(staticPath))
 
     app.get("*", (req,res)=>{
-        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
+        res.sendFile(indexPath)
     })
 }
 
