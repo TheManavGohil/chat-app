@@ -17,12 +17,14 @@ console.log("ENV variables loaded:", {
 const clientID = process.env.GOOGLE_CLIENT_ID || "YOUR_ACTUAL_CLIENT_ID";
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET || "YOUR_ACTUAL_CLIENT_SECRET";
 
+const callbackURL = process.env.NODE_ENV === "development" ? "http://localhost:5001/api/auth/google/callback" : "https://chatty-z8cs.onrender.com/api/auth/google/callback"
+
 passport.use(
   new GoogleStrategy(
     {
       clientID,
       clientSecret,
-      callbackURL: "http://localhost:5001/api/auth/google/callback",
+      callbackURL,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
