@@ -44,8 +44,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)
 
 if(process.env.NODE_ENV==="production"){
-    const staticPath = path.join(__dirname, "../../frontend/dist")
-    const indexPath = path.join(__dirname, "../../frontend", "dist", "index.html")
+    const staticPath = path.join(__dirname, "../frontend/dist")
+    const indexPath = path.join(__dirname, "../frontend", "dist", "index.html")
 
     console.log("Serving static files from:", staticPath)
     console.log("Serving index.html from:", indexPath)
