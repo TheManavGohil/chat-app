@@ -25,7 +25,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }))
 app.use(cookieparser())
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.NODE_ENV === "development" ? 'http://localhost:5173' : process.env.FRONTEND_URL ,
     credentials:true
 }))
 
@@ -42,7 +42,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/messages', messageRoutes)
 
 if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join(__dirname, "..frontend/dist")))
+    app.use(express.static(path.join(__dirname, "../frontend/dist")))
 
     app.get("*", (req,res)=>{
         res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
