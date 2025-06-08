@@ -7,6 +7,9 @@ import { generateToken } from '../lib/utils.js'
 
 const router = express.Router()
 
+// Frontend URLs based on environment
+const FRONTEND_URL = process.env.NODE_ENV === "development" ? "http://localhost:5173" : process.env.FRONTEND_URL
+
 router.post('/signup', signup)
 router.post('/login', login) 
 router.post('/logout', logout)
@@ -18,13 +21,13 @@ router.get('/check', protectRoute, checkAuth)
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }))
 
 router.get("/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost:5174/login" }),
+  passport.authenticate("google", { failureRedirect: `${FRONTEND_URL}/login` }),
   (req, res) => {
     // Generate a JWT token for the authenticated user
     if (req.user) {
       generateToken(req.user._id, res);
     }
-    res.redirect("http://localhost:5174/profile"); 
+    res.redirect(`${FRONTEND_URL}/profile`); 
   }
 )
 
