@@ -7,7 +7,7 @@ Chatty is a full-stack, real-time messaging application built with the MERN stac
 Check out the live application here: **[https://chatty-z8cs.onrender.com/](https://chatty-z8cs.onrender.com/)**
 
 > [!IMPORTANT]
-> Since this project is deployed on Render's free tier, the backend might take a minute to "spin up" when you first visit. Please be patient while it gets back to work! ⏳🐢
+> Since this project is deployed on Render's free tier, the backend might take a minute to "spin up" when you first visit. Please be patient while it gets back to work!
 
 ---
 
@@ -25,7 +25,7 @@ Check out the live application here: **[https://chatty-z8cs.onrender.com/](https
 
 ---
 
-## ✨ Features
+## Features
 
 - **Real-Time Messaging**: Instant communication powered by Socket.io.
 - **Authentication**: Secure JWT-based auth and Google OAuth integration.
@@ -37,7 +37,7 @@ Check out the live application here: **[https://chatty-z8cs.onrender.com/](https
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **React**: Modern component-based UI.
@@ -59,13 +59,13 @@ Check out the live application here: **[https://chatty-z8cs.onrender.com/](https
 
 ---
 
-## ⚙️ Local Setup
+##  Local Setup
 
 Follow these steps to run the project locally:
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/TheManavGohil/chat-app
    cd chatty-final
    ```
 
@@ -106,12 +106,12 @@ Follow these steps to run the project locally:
 
 ---
 
-## 🤝 Contribution
+## Contact
+
+- **Email**: [gohilmanav2005@gmail.com]
+
+## Contribution
 
 Contributions are always welcome! Feel free to open an issue or submit a pull request.
 
 ---
-
-## 📄 License
-
-This project is licensed under the ISC License.
