@@ -7,10 +7,23 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Node modules
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Environment variables
+.env
 *.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+dist-ssr
+build/
 
 # Editor directories and files
 .vscode/*
@@ -22,7 +35,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-
-node_modules/
-.env 
